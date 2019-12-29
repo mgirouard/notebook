@@ -6,7 +6,7 @@ You don't need an entire system to generate that static site of yours. Just use
 Initial Setup
 
     $ cd path/to/your/project
-    $ curl https://github.com/mgirouard/notebook/blob/master/notebook.mk >> Makefile
+    $ curl https://raw.githubusercontent.com/mgirouard/notebook/master/notebook.mk >> Makefile
 
 If your project already has a Makefile, just include it (you may need to adjust
 your `docs` target accordingly).
