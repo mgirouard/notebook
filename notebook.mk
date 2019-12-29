@@ -10,6 +10,9 @@
 # Define EXT to change the extension to use for markdown files.
 # If not set it defaults to 'md'
 #
+# Define MARKDOWN to specify the Markdown processor to use.
+# If not set it defaults to 'markdown'.
+#
 # Define HEADER to specify a HTML header file used to prefix the generated
 # markup.
 #
@@ -22,6 +25,7 @@
 SRC         ?= ./
 DEST        ?= ./
 EXT         ?= md
+MARKDOWN    ?= markdown
 HEADER      ?=
 FOOTER      ?=
 HOOK_TARGET ?=
@@ -33,7 +37,7 @@ htmls = $(subst $(SRC),$(DEST),$(mds:.$(EXT)=.html))
 # HTML files are only generated when new source content exists.
 $(htmls): SHELL = bash
 $(htmls): $(mds)
-	$(foreach f,$(mds),markdown '$(f)' > '$(f:.$(EXT)=.html)';)
+	$(foreach f,$(mds),$(MARKDOWN) '$(f)' > '$(f:.$(EXT)=.html)';)
 ifdef HEADER
 	$(foreach f,$(htmls), cat <<<"$$(cat '$(HEADER)' '$(f)')" > '$(f)';)
 endif
