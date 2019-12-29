@@ -19,11 +19,12 @@
 # Define HOOK_TARGET to specify a preferred target to call if using the
 # `post-commit` hook. When this file is used as a stand-alone makefile this can
 # remain unset and the default target will work as-is.
-SRC    ?= ./
-DEST   ?= ./
-EXT    ?= md
-HEADER ?=
-FOOTER ?=
+SRC         ?= ./
+DEST        ?= ./
+EXT         ?= md
+HEADER      ?=
+FOOTER      ?=
+HOOK_TARGET ?=
 
 mds   = $(shell find $(SRC) -name '*.$(EXT)')
 htmls = $(subst $(SRC),$(DEST),$(mds:.$(EXT)=.html))
@@ -43,6 +44,15 @@ endif
 # Auto-generates markup
 ifneq ($(wildcard .git/.),)
 .git/hooks/post-commit:
-	echo make > $@
+	echo 'export SRC=$(SRC)' > $@
+	echo 'export DEST=$(DEST)' >> $@
+	echo 'export EXT=$(EXT)' >> $@
+ifdef HEADER
+	echo 'export HEADER=$(HEADER)' >> $@
+endif
+ifdef FOOTER
+	echo 'export FOOTER=$(HEADER)' >> $@
+endif
+	echo 'make $(HOOK_TARGET)' >> $@
 	chmod +x $@
 endif
