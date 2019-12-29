@@ -37,7 +37,12 @@ htmls = $(subst $(SRC),$(DEST),$(mds:.$(EXT)=.html))
 # HTML files are only generated when new source content exists.
 $(htmls): SHELL = bash
 $(htmls): $(mds)
-	$(foreach f,$(mds),$(MARKDOWN) '$(f)' > '$(f:.$(EXT)=.html)';)
+# Call MARKDOWN for each source file and send the output to the destination
+# file. Each time ensuring that paths are substituted accordingly and
+# extensions are handled as well.
+	$(foreach f,$(mds),$(MARKDOWN) '$(f)' > \
+		'$(subst $(SRC),$(DEST),$(f:.$(EXT)=.html))';)
+
 ifdef HEADER
 	$(foreach f,$(htmls), cat <<<"$$(cat '$(HEADER)' '$(f)')" > '$(f)';)
 endif
@@ -46,6 +51,7 @@ ifdef FOOTER
 endif
 
 # Auto-generates markup
+# Only works in a non-bare git repository.
 ifneq ($(wildcard .git/.),)
 .git/hooks/post-commit:
 	echo 'export SRC=$(SRC)' > $@
